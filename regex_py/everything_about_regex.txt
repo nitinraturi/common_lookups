@@ -89,7 +89,43 @@
     word = 'teamraturifromuttarakhand'
     re.search(r'\b[raturi]{6}\b',word)
 
+    #Example 5
 
+    #Ignore some pattern
+    emails = 'nitin@raturi.in nitin@raturi.gov'
+    re.findall(r'\b@[-\w\d.]*[^gov\t]+\b',emails)
+
+    #Example 6
+
+    details = 'Nitin, Raturi,   nitin@raturi.in (555) 555-5555 Student, Nocompany   @nitinrraturi'
+    line = re.search(r'''
+        ^(?P<name>[-\w ]*,\s[-\w ]+\t)              #Last and First name
+        (?p<email>[-\w\d+.]+@[\w\d.]+\t)            #email
+        (?P<phone>\(?\d+\)?-?\s?\d{3}-\d{4})?\t     #Sometimes phone or not
+        (?<job>[\w\s]+,\s[\w\s]+)\t?                #Job
+        (?P<twitter>@[\w\d]+)?$                     #Twitter
+    ''',details, re.X|re.M) 
+
+    print(line.groupdict())
+
+    #Example 7
+
+    #Compiles regex patterns for multiple use
+    details = 'Nitin, Raturi,   nitin@raturi.in (555) 555-5555 Student, Nocompany   @nitinrraturi'
+    pattern = re.compile(r'''
+        ^(?P<name>(?P<first>[-\w ]*),\s(?P<last>[-\w ]+)\t)              #Last and First name Subgroups also
+        (?p<email>[-\w\d+.]+@[\w\d.]+\t)            #email
+        (?P<phone>\(?\d+\)?-?\s?\d{3}-\d{4})?\t     #Sometimes phone or not
+        (?<job>[\w\s]+,\s[\w\s]+)\t?                #Job
+        (?P<twitter>@[\w\d]+)?$                     #Twitter
+    ''',re.X|re.M)
+
+    for match in pattern.finditer(details):
+        print(match.group('name)) or print(match.group(0)) # by name or index number
+
+        or
+        #if subgroups
+        print('{first} {last} <{email}>'.format(**match.groupdict()))
 
 
 
