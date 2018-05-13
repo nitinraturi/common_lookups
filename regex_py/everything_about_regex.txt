@@ -1,0 +1,96 @@
+# Escape Characters
+    \w : any Unicode word character
+    \W : anything that isn't a Unicode character
+    \s : any whitespace
+    \S : anything that isn't a whitespace
+    \d : any number from 0 to 9
+    \D : anything that isn't a number
+    \b : word boundaries or edges of a word
+    \B : anything that isn't the edge of the word
+
+# Counts 
+    {3} : Something that occurs exactly 3 times
+    {,3} : Something that occurs 0 to 3 times
+    {3,} : Something that occurs 3 or more times
+    {3,5} : Something that occurs 3 to 5 times
+    ? : Something that occurs 0 or 1 times
+    * : Something that occurs atleast 0 times
+    + : Something that occurs atleast 1 times
+
+# Sets
+    [aple] : Matchs apple
+    [a-z]  : any lowercase letters from a to z
+    [^2]   : anything that is not 2
+
+#Python Example
+    
+    import re #Python Regular Expression Library
+
+    re.match(pattern,string_to_be_matched) ## Maches the first word found
+    re.search(pattern,string_to_be_matched) ## Maches the whole line 
+    re.findall(pattern,string_to_be_matched) ## Matches the whole string including new lines
+
+    # EXAMPLE 1
+
+    # Matching an ISDN number from the given string 
+    messy_isdn_file = "(555) 555-5555 , 555 555-5554, 555-555-5556"
+    
+
+    # There are 3 kinds of patterns present
+    # Now, First 3 different regex search ways of getting the pattern
+
+    # 555 555-5554 : without braces
+    re.search(r'\d{3} \d{3}-\d{3}', messy_isdn_file)
+    
+    # 555-555-5556 : with a - after first 3 digits
+    re.search(r'\d{3}-\d{3}-\d{4}',messy_isdn_file)
+
+    #(555) 555-5555 : with braces; braces have special meaning
+    re.search(r'\(\d{3}\) \d{3}-\d{4}', messy_isdn_file) # We need to escape (,) braces by putting a \ before them.
+
+    #All patterns match in one line, more efficient
+    re.search(r'\(?\d{3}\)?-?\d{3}-\d{4}',messy_isdn_file)
+
+    # EXAMPLE 2
+
+    messy_names_file = ['Nitin,Raturi','\n',',Raturi']
+
+    # There are two patterns present here
+    
+    # 'Nitin,Raturi' : It contains character before and after comma(,)
+    re.search(r'\w+,\w+'m, messy_names_file)
+
+    # ',Raturi' : Character missing at left side of comma(,)
+    re.search(r',\w+', messy_names_file)
+
+    # All at one
+    re.findall(r'\w*,\w+', messy_names_file)
+    
+    # EXAMPLE 3
+
+    messy_email_file = ['nitin@raturi.in','Nitin@raturi.in]
+
+    # Two Patterns here
+    # 'nitin@raturi.in' : everything in lowercase
+    re.search(r'[-\w\d+.]+@[\w\d.]+',messy_email_file)
+
+        # Lets break above pattern in two parts:
+    #1 [-\w\d+.]+ : it means before @ it could have -,any word, any digit, +, . one or more times  
+    #2 @[\w\d]+ : it means after @ it could have -,any word, any digit, . one or more times
+    
+    
+    # 'Nitin@raturi.in' : First letter is in Uppercase
+    re.search(r'[-\w\d+.]+@[\w\d.]+', messy_email_file, re.IGNORECASE)
+    re.search(r'[-\w\d+.]+@[\w\d.]+', messy_email_file, re.I) #simlar to ignore case
+
+    # EXAMPLE 4
+
+    #boundary search
+    word = 'teamraturifromuttarakhand'
+    re.search(r'\b[raturi]{6}\b',word)
+
+
+
+
+
+
